@@ -19,7 +19,7 @@ package vm
 import (
 	"errors"
 
-	"github.com/ethereum/go-ethereum/params"
+	"github.com/tenderly/net-nitro-go-ethereum/params"
 )
 
 // LookupInstructionSet returns the instruction set for the fork configured by

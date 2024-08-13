@@ -28,7 +28,7 @@ import (
 	"testing/quick"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/metrics"
+	"github.com/tenderly/net-nitro-go-ethereum/metrics"
 	"github.com/stretchr/testify/require"
 )
 

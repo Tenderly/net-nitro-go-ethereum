@@ -19,7 +19,7 @@ package params
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
 )
 
 const ArbosVersion_FixRedeemGas = uint64(11)

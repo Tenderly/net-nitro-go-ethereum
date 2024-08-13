@@ -16,7 +16,7 @@
 
 package ethconfig
 
-import "github.com/ethereum/go-ethereum/eth/downloader"
+import "github.com/tenderly/net-nitro-go-ethereum/eth/downloader"
 
 // The default config with archive mode enabled
 var ArchiveDefaults = Defaults

@@ -21,10 +21,10 @@ import (
 	"crypto/sha256"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto/kzg4844"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/crypto/kzg4844"
+	"github.com/tenderly/net-nitro-go-ethereum/params"
+	"github.com/tenderly/net-nitro-go-ethereum/rlp"
 	"github.com/holiman/uint256"
 )
 

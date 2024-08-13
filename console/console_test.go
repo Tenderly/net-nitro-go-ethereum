@@ -25,14 +25,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/console/prompt"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
-	"github.com/ethereum/go-ethereum/internal/jsre"
-	"github.com/ethereum/go-ethereum/miner"
-	"github.com/ethereum/go-ethereum/node"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/console/prompt"
+	"github.com/tenderly/net-nitro-go-ethereum/core"
+	"github.com/tenderly/net-nitro-go-ethereum/eth"
+	"github.com/tenderly/net-nitro-go-ethereum/eth/ethconfig"
+	"github.com/tenderly/net-nitro-go-ethereum/internal/jsre"
+	"github.com/tenderly/net-nitro-go-ethereum/miner"
+	"github.com/tenderly/net-nitro-go-ethereum/node"
 )
 
 const (

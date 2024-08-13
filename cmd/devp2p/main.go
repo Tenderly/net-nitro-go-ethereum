@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ethereum/go-ethereum/internal/debug"
-	"github.com/ethereum/go-ethereum/internal/flags"
-	"github.com/ethereum/go-ethereum/p2p/enode"
+	"github.com/tenderly/net-nitro-go-ethereum/internal/debug"
+	"github.com/tenderly/net-nitro-go-ethereum/internal/flags"
+	"github.com/tenderly/net-nitro-go-ethereum/p2p/enode"
 	"github.com/urfave/cli/v2"
 )
 
