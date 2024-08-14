@@ -25,7 +25,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/log"
@@ -45,9 +44,9 @@ type Options struct {
 	Config           *params.ChainConfig // Chain configuration for hard fork selection
 	Chain            core.ChainContext   // Chain context to access past block hashes
 	Header           *types.Header       // Header defining the block context to execute in
-	State            *state.StateDB      // Pre-state on top of which to estimate the gas
+	State            vm.StateDB          // Pre-state on top of which to estimate the gas
 	Backend          core.NodeInterfaceBackendAPI
-	RunScheduledTxes func(context.Context, core.NodeInterfaceBackendAPI, *state.StateDB, *types.Header, vm.BlockContext, core.MessageRunMode, *core.ExecutionResult) (*core.ExecutionResult, error)
+	RunScheduledTxes func(context.Context, core.NodeInterfaceBackendAPI, vm.StateDB, *types.Header, vm.BlockContext, core.MessageRunMode, *core.ExecutionResult) (*core.ExecutionResult, error)
 
 	ErrorRatio float64 // Allowed overestimation ratio for faster estimation termination
 }
@@ -214,8 +213,12 @@ func run(ctx context.Context, call *core.Message, opts *Options) (*core.Executio
 	// Assemble the call and the call context
 	var (
 		evmContext = core.NewEVMBlockContext(opts.Header, opts.Chain, nil)
-		dirtyState = opts.State.Copy()
+		dirtyState = opts.State
 	)
+
+	snapshot := dirtyState.Snapshot()
+	defer dirtyState.RevertToSnapshot(snapshot)
+
 	// Monitor the outer context and interrupt the EVM upon cancellation. To avoid
 	// a dangling goroutine until the outer estimation finishes, create an internal
 	// context for the lifetime of this method call.
