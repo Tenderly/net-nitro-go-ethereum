@@ -394,7 +394,6 @@ func (args *TransactionArgs) ToMessage(globalGasCap uint64, header *types.Header
 		gas = uint64(*args.Gas)
 	}
 	if globalGasCap != 0 && globalGasCap < gas {
-		log.Warn("Caller gas above allowance, capping", "requested", gas, "cap", globalGasCap)
 		gas = globalGasCap
 	}
 	var (

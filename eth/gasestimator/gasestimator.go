@@ -93,14 +93,11 @@ func Estimate(ctx context.Context, call *core.Message, opts *Options, gasCap uin
 			if transfer == nil {
 				transfer = new(big.Int)
 			}
-			log.Debug("Gas estimation capped by limited funds", "original", hi, "balance", balance,
-				"sent", transfer, "maxFeePerGas", feeCap, "fundable", allowance)
 			hi = allowance.Uint64()
 		}
 	}
 	// Recap the highest gas allowance with specified gascap.
 	if gasCap != 0 && hi > gasCap {
-		log.Debug("Caller gas above allowance, capping", "requested", hi, "cap", gasCap)
 		hi = gasCap
 	}
 	// If the transaction is a plain value transfer, short circuit estimation and
