@@ -3,9 +3,9 @@ package state
 import (
 	"errors"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/ethdb"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/core/rawdb"
+	"github.com/tenderly/net-nitro-go-ethereum/ethdb"
 )
 
 func (db *cachingDB) ActivatedAsm(target ethdb.WasmTarget, moduleHash common.Hash) ([]byte, error) {

@@ -29,13 +29,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/crypto/kzg4844"
+	"github.com/tenderly/net-nitro-go-ethereum/accounts"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/common/hexutil"
+	"github.com/tenderly/net-nitro-go-ethereum/common/math"
+	"github.com/tenderly/net-nitro-go-ethereum/core/types"
+	"github.com/tenderly/net-nitro-go-ethereum/crypto"
+	"github.com/tenderly/net-nitro-go-ethereum/crypto/kzg4844"
 	"github.com/holiman/uint256"
 )
 
@@ -94,7 +94,7 @@ type SendTxArgs struct {
 
 	// We accept "data" and "input" for backwards-compatibility reasons.
 	// "input" is the newer name and should be preferred by clients.
-	// Issue detail: https://github.com/ethereum/go-ethereum/issues/15628
+	// Issue detail: https://github.com/tenderly/net-nitro-go-ethereum/issues/15628
 	Data  *hexutil.Bytes `json:"data,omitempty"`
 	Input *hexutil.Bytes `json:"input,omitempty"`
 

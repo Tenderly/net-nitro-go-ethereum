@@ -30,12 +30,12 @@ import (
 	"syscall"
 
 	"github.com/dop251/goja"
-	"github.com/ethereum/go-ethereum/console/prompt"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/notinternal/jsre"
-	"github.com/ethereum/go-ethereum/notinternal/jsre/deps"
-	"github.com/ethereum/go-ethereum/notinternal/web3ext"
-	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/tenderly/net-nitro-go-ethereum/console/prompt"
+	"github.com/tenderly/net-nitro-go-ethereum/log"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/jsre"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/jsre/deps"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/web3ext"
+	"github.com/tenderly/net-nitro-go-ethereum/rpc"
 	"github.com/mattn/go-colorable"
 	"github.com/peterh/liner"
 )

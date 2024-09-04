@@ -20,9 +20,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/beacon/merkle"
-	"github.com/ethereum/go-ethereum/beacon/params"
-	"github.com/ethereum/go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/beacon/merkle"
+	"github.com/tenderly/net-nitro-go-ethereum/beacon/params"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
 )
 
 // BootstrapData contains a sync committee where light sync can be started,

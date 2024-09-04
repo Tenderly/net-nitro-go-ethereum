@@ -23,9 +23,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/notinternal/cmdtest"
-	"github.com/ethereum/go-ethereum/notinternal/reexec"
-	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/cmdtest"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/reexec"
+	"github.com/tenderly/net-nitro-go-ethereum/rpc"
 )
 
 type testgeth struct {

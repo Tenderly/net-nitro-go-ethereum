@@ -26,11 +26,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/bitutil"
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/p2p/rlpx"
-	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/common/bitutil"
+	"github.com/tenderly/net-nitro-go-ethereum/metrics"
+	"github.com/tenderly/net-nitro-go-ethereum/p2p/rlpx"
+	"github.com/tenderly/net-nitro-go-ethereum/rlp"
 )
 
 const (

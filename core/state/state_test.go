@@ -21,12 +21,12 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/triedb"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/core/rawdb"
+	"github.com/tenderly/net-nitro-go-ethereum/core/types"
+	"github.com/tenderly/net-nitro-go-ethereum/crypto"
+	"github.com/tenderly/net-nitro-go-ethereum/ethdb"
+	"github.com/tenderly/net-nitro-go-ethereum/triedb"
 	"github.com/holiman/uint256"
 )
 

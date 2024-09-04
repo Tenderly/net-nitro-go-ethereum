@@ -21,8 +21,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/notinternal/cmdtest"
-	"github.com/ethereum/go-ethereum/notinternal/reexec"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/cmdtest"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/reexec"
 )
 
 const registeredName = "clef-test"

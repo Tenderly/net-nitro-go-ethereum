@@ -3,18 +3,18 @@ package arbitrum
 import (
 	"context"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/arbitrum_types"
-	"github.com/ethereum/go-ethereum/consensus"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/bloombits"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth/filters"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/notinternal/shutdowncheck"
-	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/tenderly/net-nitro-go-ethereum/accounts"
+	"github.com/tenderly/net-nitro-go-ethereum/arbitrum_types"
+	"github.com/tenderly/net-nitro-go-ethereum/consensus"
+	"github.com/tenderly/net-nitro-go-ethereum/core"
+	"github.com/tenderly/net-nitro-go-ethereum/core/bloombits"
+	"github.com/tenderly/net-nitro-go-ethereum/core/types"
+	"github.com/tenderly/net-nitro-go-ethereum/eth/filters"
+	"github.com/tenderly/net-nitro-go-ethereum/ethdb"
+	"github.com/tenderly/net-nitro-go-ethereum/event"
+	"github.com/tenderly/net-nitro-go-ethereum/node"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/shutdowncheck"
+	"github.com/tenderly/net-nitro-go-ethereum/rpc"
 )
 
 type Backend struct {

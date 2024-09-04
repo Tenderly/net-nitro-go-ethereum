@@ -29,12 +29,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/notinternal/testlog"
-	"github.com/ethereum/go-ethereum/p2p/enode"
-	"github.com/ethereum/go-ethereum/p2p/enr"
-	"github.com/ethereum/go-ethereum/p2p/rlpx"
+	"github.com/tenderly/net-nitro-go-ethereum/crypto"
+	"github.com/tenderly/net-nitro-go-ethereum/log"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/testlog"
+	"github.com/tenderly/net-nitro-go-ethereum/p2p/enode"
+	"github.com/tenderly/net-nitro-go-ethereum/p2p/enr"
+	"github.com/tenderly/net-nitro-go-ethereum/p2p/rlpx"
 )
 
 type testTransport struct {

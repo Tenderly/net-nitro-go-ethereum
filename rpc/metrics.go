@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ethereum/go-ethereum/metrics"
+	"github.com/tenderly/net-nitro-go-ethereum/metrics"
 )
 
 var (

@@ -24,12 +24,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/common/compiler"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/notinternal/flags"
+	"github.com/tenderly/net-nitro-go-ethereum/accounts/abi/bind"
+	"github.com/tenderly/net-nitro-go-ethereum/cmd/utils"
+	"github.com/tenderly/net-nitro-go-ethereum/common/compiler"
+	"github.com/tenderly/net-nitro-go-ethereum/crypto"
+	"github.com/tenderly/net-nitro-go-ethereum/log"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/flags"
 	"github.com/urfave/cli/v2"
 )
 

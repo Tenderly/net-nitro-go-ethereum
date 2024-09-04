@@ -23,9 +23,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/notinternal/version"
-	"github.com/ethereum/go-ethereum/params"
+	"github.com/tenderly/net-nitro-go-ethereum/log"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/version"
+	"github.com/tenderly/net-nitro-go-ethereum/params"
 	"github.com/mattn/go-isatty"
 	"github.com/urfave/cli/v2"
 )

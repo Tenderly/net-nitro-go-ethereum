@@ -22,8 +22,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/metrics/internal"
+	"github.com/tenderly/net-nitro-go-ethereum/metrics"
+	"github.com/tenderly/net-nitro-go-ethereum/metrics/internal"
 )
 
 func TestMain(m *testing.M) {

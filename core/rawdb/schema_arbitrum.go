@@ -19,7 +19,7 @@
 package rawdb
 
 import (
-	"github.com/ethereum/go-ethereum/common"
+	"github.com/tenderly/net-nitro-go-ethereum/common"
 )
 
 const WasmSchemaVersion byte = 0x01

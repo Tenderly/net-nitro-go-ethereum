@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/dop251/goja"
-	"github.com/ethereum/go-ethereum/notinternal/jsre"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/jsre"
 )
 
 // TestUndefinedAsParam ensures that personal functions can receive

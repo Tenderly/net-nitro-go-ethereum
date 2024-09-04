@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/console"
-	"github.com/ethereum/go-ethereum/notinternal/flags"
+	"github.com/tenderly/net-nitro-go-ethereum/cmd/utils"
+	"github.com/tenderly/net-nitro-go-ethereum/console"
+	"github.com/tenderly/net-nitro-go-ethereum/notinternal/flags"
 	"github.com/urfave/cli/v2"
 )
 
