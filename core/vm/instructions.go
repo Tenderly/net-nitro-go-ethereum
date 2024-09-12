@@ -813,6 +813,10 @@ func opStop(pc *uint64, interpreter *EVMInterpreter, scope *ScopeContext) ([]byt
 }
 
 func opSelfdestruct(pc *uint64, interpreter *EVMInterpreter, scope *ScopeContext) ([]byte, error) {
+	if interpreter.evm.chainRules.IsKinto {
+		return opSelfdestructKinto(pc, interpreter, scope)
+	}
+
 	if interpreter.readOnly {
 		return nil, ErrWriteProtection
 	}
@@ -832,6 +836,10 @@ func opSelfdestruct(pc *uint64, interpreter *EVMInterpreter, scope *ScopeContext
 }
 
 func opSelfdestruct6780(pc *uint64, interpreter *EVMInterpreter, scope *ScopeContext) ([]byte, error) {
+	if interpreter.evm.chainRules.IsKinto {
+		return opSelfdestructKinto(pc, interpreter, scope)
+	}
+
 	if interpreter.readOnly {
 		return nil, ErrWriteProtection
 	}
