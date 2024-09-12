@@ -371,6 +371,8 @@ type ChainConfig struct {
 	Clique *CliqueConfig `json:"clique,omitempty"`
 
 	ArbitrumChainParams ArbitrumChainParams `json:"arbitrum,omitempty"`
+
+	IsKinto bool `json:"isKinto,omitempty"`
 }
 
 // EthashConfig is the consensus engine configs for proof-of-work based sealing.
@@ -917,6 +919,7 @@ func (err *ConfigCompatError) Error() string {
 // phases.
 type Rules struct {
 	IsArbitrum, IsStylus                                    bool
+	IsKinto                                                 bool
 	ChainID                                                 *big.Int
 	ArbOSVersion                                            uint64
 	IsHomestead, IsEIP150, IsEIP155, IsEIP158               bool
@@ -937,6 +940,7 @@ func (c *ChainConfig) Rules(num *big.Int, isMerge bool, timestamp uint64, curren
 	return Rules{
 		IsArbitrum:       c.IsArbitrum(),
 		IsStylus:         c.IsArbitrum() && currentArbosVersion >= ArbosVersion_Stylus,
+		IsKinto:          c.IsKinto,
 		ChainID:          new(big.Int).Set(chainID),
 		ArbOSVersion:     currentArbosVersion,
 		IsHomestead:      c.IsHomestead(num),
