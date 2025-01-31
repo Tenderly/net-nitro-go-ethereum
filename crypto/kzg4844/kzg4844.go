@@ -109,7 +109,7 @@ func BlobToCommitment(blob Blob) (Commitment, error) {
 	if useCKZG.Load() {
 		return ckzgBlobToCommitment(blob)
 	}
-	return gokzgBlobToCommitment(blob)
+	return gokzgBlobToCommitment(&blob)
 }
 
 // ComputeProof computes the KZG proof at the given point for the polynomial
@@ -118,7 +118,7 @@ func ComputeProof(blob Blob, point Point) (Proof, Claim, error) {
 	if useCKZG.Load() {
 		return ckzgComputeProof(blob, point)
 	}
-	return gokzgComputeProof(blob, point)
+	return gokzgComputeProof(&blob, point)
 }
 
 // VerifyProof verifies the KZG proof that the polynomial represented by the blob
@@ -138,7 +138,7 @@ func ComputeBlobProof(blob Blob, commitment Commitment) (Proof, error) {
 	if useCKZG.Load() {
 		return ckzgComputeBlobProof(blob, commitment)
 	}
-	return gokzgComputeBlobProof(blob, commitment)
+	return gokzgComputeBlobProof(&blob, commitment)
 }
 
 // VerifyBlobProof verifies that the blob data corresponds to the provided commitment.
@@ -146,7 +146,7 @@ func VerifyBlobProof(blob Blob, commitment Commitment, proof Proof) error {
 	if useCKZG.Load() {
 		return ckzgVerifyBlobProof(blob, commitment, proof)
 	}
-	return gokzgVerifyBlobProof(blob, commitment, proof)
+	return gokzgVerifyBlobProof(&blob, commitment, proof)
 }
 
 // CalcBlobHashV1 calculates the 'versioned blob hash' of a commitment.
