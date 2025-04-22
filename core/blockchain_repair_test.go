@@ -22,7 +22,7 @@ package core
 
 import (
 	"math/big"
-	"path"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -31,6 +31,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/ethereum/go-ethereum/ethdb/pebble"
 	"github.com/ethereum/go-ethereum/params"
 )
 
@@ -1757,20 +1758,20 @@ func testRepair(t *testing.T, tt *rewindTest, snapshots bool) {
 
 func testRepairWithScheme(t *testing.T, tt *rewindTest, snapshots bool, scheme string) {
 	// It's hard to follow the test case, visualize the input
-	//log.Root().SetHandler(log.LvlFilterHandler(log.LvlTrace, log.StreamHandler(os.Stderr, log.TerminalFormat(true))))
-	// fmt.Println(tt.dump(true))
+	// log.SetDefault(log.NewLogger(log.NewTerminalHandlerWithLevel(os.Stderr, log.LevelInfo, true)))
+	// fmt.Println(tt.dump(false))
 
 	// Create a temporary persistent database
 	datadir := t.TempDir()
-	ancient := path.Join(datadir, "ancient")
+	ancient := filepath.Join(datadir, "ancient")
 
-	db, err := rawdb.Open(rawdb.OpenOptions{
-		Directory:         datadir,
-		AncientsDirectory: ancient,
-		Ephemeral:         true,
-	})
+	pdb, err := pebble.New(datadir, 0, 0, "", false, nil)
 	if err != nil {
-		t.Fatalf("Failed to create persistent database: %v", err)
+		t.Fatalf("Failed to create persistent key-value database: %v", err)
+	}
+	db, err := rawdb.NewDatabaseWithFreezer(pdb, ancient, "", false)
+	if err != nil {
+		t.Fatalf("Failed to create persistent freezer database: %v", err)
 	}
 	defer db.Close() // Might double close, should be fine
 
@@ -1798,7 +1799,7 @@ func testRepairWithScheme(t *testing.T, tt *rewindTest, snapshots bool, scheme s
 		config.SnapshotLimit = 256
 		config.SnapshotWait = true
 	}
-	chain, err := NewBlockChain(db, config, nil, gspec, nil, engine, vm.Config{}, nil, nil)
+	chain, err := NewBlockChain(db, config, nil, gspec, nil, engine, vm.Config{}, nil)
 	if err != nil {
 		t.Fatalf("Failed to create chain: %v", err)
 	}
@@ -1834,10 +1835,14 @@ func testRepairWithScheme(t *testing.T, tt *rewindTest, snapshots bool, scheme s
 	}
 	// Force run a freeze cycle
 	type freezer interface {
-		Freeze(threshold uint64) error
+		Freeze() error
 		Ancients() (uint64, error)
 	}
-	db.(freezer).Freeze(tt.freezeThreshold)
+	if tt.freezeThreshold < uint64(tt.canonicalBlocks) {
+		final := uint64(tt.canonicalBlocks) - tt.freezeThreshold
+		chain.SetFinalized(canonblocks[int(final)-1].Header())
+	}
+	db.(freezer).Freeze()
 
 	// Set the simulated pivot block
 	if tt.pivotBlock != nil {
@@ -1849,17 +1854,17 @@ func testRepairWithScheme(t *testing.T, tt *rewindTest, snapshots bool, scheme s
 	chain.stopWithoutSaving()
 
 	// Start a new blockchain back up and see where the repair leads us
-	db, err = rawdb.Open(rawdb.OpenOptions{
-		Directory:         datadir,
-		AncientsDirectory: ancient,
-		Ephemeral:         true,
-	})
+	pdb, err = pebble.New(datadir, 0, 0, "", false, nil)
 	if err != nil {
-		t.Fatalf("Failed to reopen persistent database: %v", err)
+		t.Fatalf("Failed to reopen persistent key-value database: %v", err)
+	}
+	db, err = rawdb.NewDatabaseWithFreezer(pdb, ancient, "", false)
+	if err != nil {
+		t.Fatalf("Failed to reopen persistent freezer database: %v", err)
 	}
 	defer db.Close()
 
-	newChain, err := NewBlockChain(db, config, nil, gspec, nil, engine, vm.Config{}, nil, nil)
+	newChain, err := NewBlockChain(db, config, nil, gspec, nil, engine, vm.Config{}, nil)
 	if err != nil {
 		t.Fatalf("Failed to recreate chain: %v", err)
 	}
@@ -1908,18 +1913,19 @@ func TestIssue23496(t *testing.T) {
 
 func testIssue23496(t *testing.T, scheme string) {
 	// It's hard to follow the test case, visualize the input
-	//log.Root().SetHandler(log.LvlFilterHandler(log.LvlTrace, log.StreamHandler(os.Stderr, log.TerminalFormat(true))))
+	// log.SetDefault(log.NewLogger(log.NewTerminalHandlerWithLevel(os.Stderr, log.LevelInfo, true)))
 
 	// Create a temporary persistent database
 	datadir := t.TempDir()
-	ancient := path.Join(datadir, "ancient")
+	ancient := filepath.Join(datadir, "ancient")
 
-	db, err := rawdb.Open(rawdb.OpenOptions{
-		Directory:         datadir,
-		AncientsDirectory: ancient,
-	})
+	pdb, err := pebble.New(datadir, 0, 0, "", false, nil)
 	if err != nil {
-		t.Fatalf("Failed to create persistent database: %v", err)
+		t.Fatalf("Failed to create persistent key-value database: %v", err)
+	}
+	db, err := rawdb.NewDatabaseWithFreezer(pdb, ancient, "", false)
+	if err != nil {
+		t.Fatalf("Failed to create persistent freezer database: %v", err)
 	}
 	defer db.Close() // Might double close, should be fine
 
@@ -1931,7 +1937,7 @@ func testIssue23496(t *testing.T, scheme string) {
 		}
 		engine = ethash.NewFullFaker()
 	)
-	chain, err := NewBlockChain(db, DefaultCacheConfigWithScheme(scheme), nil, gspec, nil, engine, vm.Config{}, nil, nil)
+	chain, err := NewBlockChain(db, DefaultCacheConfigWithScheme(scheme), nil, gspec, nil, engine, vm.Config{}, nil)
 	if err != nil {
 		t.Fatalf("Failed to create chain: %v", err)
 	}
@@ -1971,17 +1977,17 @@ func testIssue23496(t *testing.T, scheme string) {
 	chain.stopWithoutSaving()
 
 	// Start a new blockchain back up and see where the repair leads us
-	db, err = rawdb.Open(rawdb.OpenOptions{
-		Directory:         datadir,
-		AncientsDirectory: ancient,
-		Ephemeral:         true,
-	})
+	pdb, err = pebble.New(datadir, 0, 0, "", false, nil)
 	if err != nil {
-		t.Fatalf("Failed to reopen persistent database: %v", err)
+		t.Fatalf("Failed to reopen persistent key-value database: %v", err)
+	}
+	db, err = rawdb.NewDatabaseWithFreezer(pdb, ancient, "", false)
+	if err != nil {
+		t.Fatalf("Failed to reopen persistent freezer database: %v", err)
 	}
 	defer db.Close()
 
-	chain, err = NewBlockChain(db, DefaultCacheConfigWithScheme(scheme), nil, gspec, nil, engine, vm.Config{}, nil, nil)
+	chain, err = NewBlockChain(db, DefaultCacheConfigWithScheme(scheme), nil, gspec, nil, engine, vm.Config{}, nil)
 	if err != nil {
 		t.Fatalf("Failed to recreate chain: %v", err)
 	}

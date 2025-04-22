@@ -45,8 +45,8 @@ var InterceptRPCMessage = func(
 // Gets ArbOS's maximum intended gas per second
 var GetArbOSSpeedLimitPerSecond func(statedb *state.StateDB) (uint64, error)
 
-// Allows ArbOS to update the gas cap so that it ignores the message's specific L1 poster costs.
-var InterceptRPCGasCap = func(gascap *uint64, msg *Message, header *types.Header, statedb vm.StateDB) {}
+// While processing RPC only - Ask ArbOS what are the poster costs for this message.
+var RPCPostingGasHook = func(msg *Message, header *types.Header, statedb *state.StateDB) (uint64, error) { return 0, nil }
 
 // Renders a solidity error in human-readable form
 var RenderRPCError func(data []byte) error
@@ -57,5 +57,5 @@ type NodeInterfaceBackendAPI interface {
 	BlockByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Block, error)
 	HeaderByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Header, error)
 	GetLogs(ctx context.Context, blockHash common.Hash, number uint64) ([][]*types.Log, error)
-	GetEVM(ctx context.Context, msg *Message, state vm.StateDB, header *types.Header, vmConfig *vm.Config, blockCtx *vm.BlockContext) *vm.EVM
+	GetEVM(ctx context.Context, state vm.StateDB, header *types.Header, vmConfig *vm.Config, blockCtx *vm.BlockContext) *vm.EVM
 }

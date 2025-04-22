@@ -20,7 +20,8 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/ethereum/go-ethereum/core/tracing"
+	"github.com/ethereum/go-ethereum/core/types"
 )
 
 type arbitrumTransfer struct {
@@ -30,11 +31,9 @@ type arbitrumTransfer struct {
 	Value   string  `json:"value"`
 }
 
-func (t *callTracer) CaptureArbitrumTransfer(
-	env *vm.EVM, from, to *common.Address, value *big.Int, before bool, purpose string,
-) {
+func (t *callTracer) CaptureArbitrumTransfer(from, to *common.Address, value *big.Int, before bool, reason tracing.BalanceChangeReason) {
 	transfer := arbitrumTransfer{
-		Purpose: purpose,
+		Purpose: reason.Str(),
 		Value:   bigToHex(value),
 	}
 	if from != nil {
@@ -52,18 +51,12 @@ func (t *callTracer) CaptureArbitrumTransfer(
 	}
 }
 
-func (*fourByteTracer) CaptureArbitrumTransfer(env *vm.EVM, from, to *common.Address, value *big.Int, before bool, purpose string) {
-}
-func (*noopTracer) CaptureArbitrumTransfer(env *vm.EVM, from, to *common.Address, value *big.Int, before bool, purpose string) {
-}
-func (*prestateTracer) CaptureArbitrumTransfer(env *vm.EVM, from, to *common.Address, value *big.Int, before bool, purpose string) {
-}
-func (t *flatCallTracer) CaptureArbitrumTransfer(env *vm.EVM, from, to *common.Address, value *big.Int, before bool, purpose string) {
+func (t *flatCallTracer) CaptureArbitrumTransfer(from, to *common.Address, value *big.Int, before bool, reason tracing.BalanceChangeReason) {
 	if t.interrupt.Load() {
 		return
 	}
 	transfer := arbitrumTransfer{
-		Purpose: purpose,
+		Purpose: reason.Str(),
 		Value:   bigToHex(value),
 	}
 	if from != nil {
@@ -81,23 +74,15 @@ func (t *flatCallTracer) CaptureArbitrumTransfer(env *vm.EVM, from, to *common.A
 	}
 }
 
-func (*callTracer) CaptureArbitrumStorageGet(key common.Hash, depth int, before bool)     {}
-func (*fourByteTracer) CaptureArbitrumStorageGet(key common.Hash, depth int, before bool) {}
-func (*noopTracer) CaptureArbitrumStorageGet(key common.Hash, depth int, before bool)     {}
-func (*prestateTracer) CaptureArbitrumStorageGet(key common.Hash, depth int, before bool) {}
-func (*flatCallTracer) CaptureArbitrumStorageGet(key common.Hash, depth int, before bool) {}
+func (t *prestateTracer) CaptureArbitrumStorageGet(key common.Hash, depth int, before bool) {
+	t.lookupAccount(types.ArbosStateAddress)
+	t.lookupStorage(types.ArbosStateAddress, key)
+}
 
-func (*callTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool)     {}
-func (*fourByteTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool) {}
-func (*noopTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool)     {}
-func (*prestateTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool) {}
-func (*flatCallTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool) {}
-
-func (*callTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64)     {}
-func (*fourByteTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64) {}
-func (*noopTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64)     {}
-func (*prestateTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64) {}
-func (*flatCallTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64) {}
+func (t *prestateTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool) {
+	t.lookupAccount(types.ArbosStateAddress)
+	t.lookupStorage(types.ArbosStateAddress, key)
+}
 
 func bigToHex(n *big.Int) string {
 	if n == nil {

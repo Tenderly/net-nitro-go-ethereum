@@ -58,7 +58,6 @@ var pregenerated bool
 func init() {
 	// Reduce some of the parameters to make the tester faster
 	fullMaxForkAncestry = 10000
-	lightMaxForkAncestry = 10000
 	blockCacheMaxItems = 1024
 	fsHeaderSafetyNet = 256
 	fsHeaderContCheck = 500 * time.Millisecond
@@ -169,7 +168,7 @@ func (tc *testChain) generate(n int, seed byte, parent *types.Block, heavy bool)
 		}
 		// Include transactions to the miner to make blocks more interesting.
 		if parent == tc.blocks[0] && i%22 == 0 {
-			signer := types.MakeSigner(params.TestChainConfig, block.Number(), block.Timestamp())
+			signer := types.MakeSigner(params.TestChainConfig, block.Number(), block.Timestamp(), params.MaxArbosVersionSupported)
 			tx, err := types.SignTx(types.NewTransaction(block.TxNonce(testAddress), common.Address{seed}, big.NewInt(1000), params.TxGas, block.BaseFee(), nil), signer, testKey)
 			if err != nil {
 				panic(err)
@@ -218,7 +217,7 @@ func newTestBlockchain(blocks []*types.Block) *core.BlockChain {
 		if pregenerated {
 			panic("Requested chain generation outside of init")
 		}
-		chain, err := core.NewBlockChain(rawdb.NewMemoryDatabase(), nil, nil, testGspec, nil, ethash.NewFaker(), vm.Config{}, nil, nil)
+		chain, err := core.NewBlockChain(rawdb.NewMemoryDatabase(), nil, nil, testGspec, nil, ethash.NewFaker(), vm.Config{}, nil)
 		if err != nil {
 			panic(err)
 		}

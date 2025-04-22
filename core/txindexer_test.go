@@ -12,13 +12,12 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>
+// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
 import (
 	"math/big"
-	"os"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -211,9 +210,8 @@ func TestTxIndexer(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		frdir := t.TempDir()
-		db, _ := rawdb.NewDatabaseWithFreezer(rawdb.NewMemoryDatabase(), frdir, "", false)
-		rawdb.WriteAncientBlocks(db, append([]*types.Block{gspec.ToBlock()}, blocks...), append([]types.Receipts{{}}, receipts...), big.NewInt(0))
+		db, _ := rawdb.NewDatabaseWithFreezer(rawdb.NewMemoryDatabase(), "", "", false)
+		rawdb.WriteAncientBlocks(db, append([]*types.Block{gspec.ToBlock()}, blocks...), append([]types.Receipts{{}}, receipts...))
 
 		// Index the initial blocks from ancient store
 		indexer := &txIndexer{
@@ -238,6 +236,5 @@ func TestTxIndexer(t *testing.T) {
 		verify(db, 0, indexer)
 
 		db.Close()
-		os.RemoveAll(frdir)
 	}
 }
