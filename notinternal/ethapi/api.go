@@ -709,7 +709,7 @@ func doCall(ctx context.Context, b Backend, args TransactionArgs, state vm.State
 	return applyMessage(ctx, b, args, state, header, timeout, gp, &blockCtx, &vm.Config{NoBaseFee: true}, precompiles, true, runMode)
 }
 
-func applyMessage(ctx context.Context, b Backend, args TransactionArgs, state *state.StateDB, header *types.Header, timeout time.Duration, gp *core.GasPool, blockContext *vm.BlockContext, vmConfig *vm.Config, precompiles vm.PrecompiledContracts, skipChecks bool, runMode core.MessageRunMode) (*core.ExecutionResult, error) {
+func applyMessage(ctx context.Context, b Backend, args TransactionArgs, state vm.StateDB, header *types.Header, timeout time.Duration, gp *core.GasPool, blockContext *vm.BlockContext, vmConfig *vm.Config, precompiles vm.PrecompiledContracts, skipChecks bool, runMode core.MessageRunMode) (*core.ExecutionResult, error) {
 	// Get a new instance of the EVM.
 	if err := args.CallDefaults(gp.Gas(), blockContext.BaseFee, b.ChainConfig().ChainID); err != nil {
 		return nil, err
@@ -756,7 +756,7 @@ func applyMessage(ctx context.Context, b Backend, args TransactionArgs, state *s
 	return res, err
 }
 
-func applyMessageWithEVM(ctx context.Context, evm *vm.EVM, msg *core.Message, state *state.StateDB, timeout time.Duration, gp *core.GasPool, b Backend, header *types.Header, blockContext vm.BlockContext) (*core.ExecutionResult, error) {
+func applyMessageWithEVM(ctx context.Context, evm *vm.EVM, msg *core.Message, state vm.StateDB, timeout time.Duration, gp *core.GasPool, b Backend, header *types.Header, blockContext vm.BlockContext) (*core.ExecutionResult, error) {
 	// Wait for the context to be done and cancel the evm. Even if the
 	// EVM has finished, cancelling may be done (repeatedly)
 	go func() {

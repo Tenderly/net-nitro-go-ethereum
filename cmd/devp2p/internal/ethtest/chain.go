@@ -24,7 +24,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"maps"
 	"math/big"
 	"os"
 	"path/filepath"
@@ -162,10 +161,11 @@ func (c *Chain) RootAt(height int) common.Hash {
 // GetSender returns the address associated with account at the index in the
 // pre-funded accounts list.
 func (c *Chain) GetSender(idx int) (common.Address, uint64) {
-	accounts := slices.SortedFunc(maps.Keys(c.senders), common.Address.Cmp)
+	panic("")
+	// accounts := slices.SortedFunc(maps.Keys(c.senders), common.Address.Cmp)
 
-	addr := accounts[idx]
-	return addr, c.senders[addr].Nonce
+	// addr := accounts[idx]
+	// return addr, c.senders[addr].Nonce
 }
 
 // IncNonce increases the specified signing account's pending nonce.

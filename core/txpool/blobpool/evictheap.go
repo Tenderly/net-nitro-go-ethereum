@@ -18,9 +18,7 @@ package blobpool
 
 import (
 	"container/heap"
-	"maps"
 	"math"
-	"slices"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/holiman/uint256"
@@ -47,19 +45,20 @@ type evictHeap struct {
 // newPriceHeap creates a new heap of cheapest accounts in the blob pool to evict
 // from in case of over saturation.
 func newPriceHeap(basefee *uint256.Int, blobfee *uint256.Int, index map[common.Address][]*blobTxMeta) *evictHeap {
-	heap := &evictHeap{
-		metas: index,
-		index: make(map[common.Address]int, len(index)),
-	}
-	// Populate the heap in account sort order. Not really needed in practice,
-	// but it makes the heap initialization deterministic and less annoying to
-	// test in unit tests.
-	heap.addrs = slices.SortedFunc(maps.Keys(index), common.Address.Cmp)
-	for i, addr := range heap.addrs {
-		heap.index[addr] = i
-	}
-	heap.reinit(basefee, blobfee, true)
-	return heap
+	panic("")
+	// heap := &evictHeap{
+	// 	metas: index,
+	// 	index: make(map[common.Address]int, len(index)),
+	// }
+	// // Populate the heap in account sort order. Not really needed in practice,
+	// // but it makes the heap initialization deterministic and less annoying to
+	// // test in unit tests.
+	// heap.addrs = slices.SortedFunc(maps.Keys(index), common.Address.Cmp)
+	// for i, addr := range heap.addrs {
+	// 	heap.index[addr] = i
+	// }
+	// heap.reinit(basefee, blobfee, true)
+	// return heap
 }
 
 // reinit updates the pre-calculated dynamic fee jumps in the price heap and runs

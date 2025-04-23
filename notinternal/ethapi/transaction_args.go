@@ -29,8 +29,8 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/consensus/misc/eip4844"
 	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/crypto/kzg4844"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
@@ -430,7 +430,7 @@ func (args *TransactionArgs) CallDefaults(globalGasCap uint64, baseFee *big.Int,
 }
 
 // Assumes that fields are not nil, i.e. setDefaults or CallDefaults has been called.
-func (args *TransactionArgs) ToMessage(baseFee *big.Int, globalGasCap uint64, header *types.Header, state *state.StateDB, runMode core.MessageRunMode, skipNonceCheck, skipEoACheck bool) *core.Message {
+func (args *TransactionArgs) ToMessage(baseFee *big.Int, globalGasCap uint64, header *types.Header, state vm.StateDB, runMode core.MessageRunMode, skipNonceCheck, skipEoACheck bool) *core.Message {
 	var (
 		gasPrice  *big.Int
 		gasFeeCap *big.Int

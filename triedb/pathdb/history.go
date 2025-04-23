@@ -21,8 +21,6 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"maps"
-	"slices"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -249,29 +247,30 @@ type history struct {
 
 // newHistory constructs the state history object with provided state change set.
 func newHistory(root common.Hash, parent common.Hash, block uint64, accounts map[common.Address][]byte, storages map[common.Address]map[common.Hash][]byte, rawStorageKey bool) *history {
-	var (
-		accountList = slices.SortedFunc(maps.Keys(accounts), common.Address.Cmp)
-		storageList = make(map[common.Address][]common.Hash)
-	)
-	for addr, slots := range storages {
-		storageList[addr] = slices.SortedFunc(maps.Keys(slots), common.Hash.Cmp)
-	}
-	version := historyVersion
-	if !rawStorageKey {
-		version = stateHistoryV0
-	}
-	return &history{
-		meta: &meta{
-			version: version,
-			parent:  parent,
-			root:    root,
-			block:   block,
-		},
-		accounts:    accounts,
-		accountList: accountList,
-		storages:    storages,
-		storageList: storageList,
-	}
+	panic("")
+	// var (
+	// 	accountList = slices.SortedFunc(maps.Keys(accounts), common.Address.Cmp)
+	// 	storageList = make(map[common.Address][]common.Hash)
+	// )
+	// for addr, slots := range storages {
+	// 	storageList[addr] = slices.SortedFunc(maps.Keys(slots), common.Hash.Cmp)
+	// }
+	// version := historyVersion
+	// if !rawStorageKey {
+	// 	version = stateHistoryV0
+	// }
+	// return &history{
+	// 	meta: &meta{
+	// 		version: version,
+	// 		parent:  parent,
+	// 		root:    root,
+	// 		block:   block,
+	// 	},
+	// 	accounts:    accounts,
+	// 	accountList: accountList,
+	// 	storages:    storages,
+	// 	storageList: storageList,
+	// }
 }
 
 // stateSet returns the state set, keyed by the hash of the account address

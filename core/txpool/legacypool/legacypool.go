@@ -1670,9 +1670,9 @@ func (as *accountSet) addTx(tx *types.Transaction) {
 // flatten returns the list of addresses within this set, also caching it for later
 // reuse. The returned slice should not be changed!
 func (as *accountSet) flatten() []common.Address {
-	if as.cache == nil {
-		as.cache = slices.Collect(maps.Keys(as.accounts))
-	}
+	// if as.cache == nil {
+	// 	as.cache = slices.Collect(maps.Keys(as.accounts))
+	// }
 	return as.cache
 }
 

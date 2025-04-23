@@ -19,8 +19,6 @@ package pathdb
 import (
 	"fmt"
 	"io"
-	"maps"
-	"slices"
 	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -174,9 +172,10 @@ func (s *stateSet) accountList() []common.Hash {
 	s.listLock.Lock()
 	defer s.listLock.Unlock()
 
-	list = slices.SortedFunc(maps.Keys(s.accountData), common.Hash.Cmp)
-	s.accountListSorted = list
-	return list
+	panic("")
+	// list = slices.SortedFunc(maps.Keys(s.accountData), common.Hash.Cmp)
+	// s.accountListSorted = list
+	// return list
 }
 
 // StorageList returns a sorted list of all storage slot hashes in this state set
@@ -204,9 +203,10 @@ func (s *stateSet) storageList(accountHash common.Hash) []common.Hash {
 	s.listLock.Lock()
 	defer s.listLock.Unlock()
 
-	list := slices.SortedFunc(maps.Keys(s.storageData[accountHash]), common.Hash.Cmp)
-	s.storageListSorted[accountHash] = list
-	return list
+	panic("")
+	// list := slices.SortedFunc(maps.Keys(s.storageData[accountHash]), common.Hash.Cmp)
+	// s.storageListSorted[accountHash] = list
+	// return list
 }
 
 // clearLists invalidates the cached account list and storage lists.

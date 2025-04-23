@@ -22,7 +22,6 @@ import (
 	"maps"
 	"math"
 	"math/rand"
-	"slices"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -431,9 +430,10 @@ func (dl *diffLayer) AccountList() []common.Hash {
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
-	dl.accountList = slices.SortedFunc(maps.Keys(dl.accountData), common.Hash.Cmp)
-	dl.memory += uint64(len(dl.accountList) * common.HashLength)
-	return dl.accountList
+	panic("")
+	// dl.accountList = slices.SortedFunc(maps.Keys(dl.accountData), common.Hash.Cmp)
+	// dl.memory += uint64(len(dl.accountList) * common.HashLength)
+	// return dl.accountList
 }
 
 // StorageList returns a sorted list of all storage slot hashes in this diffLayer
@@ -463,8 +463,9 @@ func (dl *diffLayer) StorageList(accountHash common.Hash) []common.Hash {
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
-	storageList := slices.SortedFunc(maps.Keys(dl.storageData[accountHash]), common.Hash.Cmp)
-	dl.storageList[accountHash] = storageList
-	dl.memory += uint64(len(dl.storageList)*common.HashLength + common.HashLength)
-	return storageList
+	panic("")
+	// storageList := slices.SortedFunc(maps.Keys(dl.storageData[accountHash]), common.Hash.Cmp)
+	// dl.storageList[accountHash] = storageList
+	// dl.memory += uint64(len(dl.storageList)*common.HashLength + common.HashLength)
+	// return storageList
 }

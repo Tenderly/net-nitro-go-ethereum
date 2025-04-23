@@ -18,13 +18,9 @@
 package netutil
 
 import (
-	"bytes"
 	"errors"
-	"fmt"
-	"maps"
 	"net"
 	"net/netip"
-	"slices"
 	"strings"
 )
 
@@ -323,18 +319,5 @@ func (s *DistinctNetSet) key(ip netip.Addr) netip.Prefix {
 
 // String implements fmt.Stringer
 func (s DistinctNetSet) String() string {
-	keys := slices.SortedFunc(maps.Keys(s.members), func(a, b netip.Prefix) int {
-		return strings.Compare(a.String(), b.String())
-	})
-
-	var buf bytes.Buffer
-	buf.WriteString("{")
-	for i, k := range keys {
-		fmt.Fprintf(&buf, "%v×%d", k, s.members[k])
-		if i != len(keys)-1 {
-			buf.WriteString(" ")
-		}
-	}
-	buf.WriteString("}")
-	return buf.String()
+	panic("")
 }

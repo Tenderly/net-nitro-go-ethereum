@@ -46,7 +46,7 @@ var InterceptRPCMessage = func(
 var GetArbOSSpeedLimitPerSecond func(statedb *state.StateDB) (uint64, error)
 
 // While processing RPC only - Ask ArbOS what are the poster costs for this message.
-var RPCPostingGasHook = func(msg *Message, header *types.Header, statedb *state.StateDB) (uint64, error) { return 0, nil }
+var RPCPostingGasHook = func(msg *Message, header *types.Header, statedb vm.StateDB) (uint64, error) { return 0, nil }
 
 // Renders a solidity error in human-readable form
 var RenderRPCError func(data []byte) error
