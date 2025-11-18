@@ -22,7 +22,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/internal/ethapi/override"
+	"github.com/ethereum/go-ethereum/notinternal/ethapi/override"
 )
 
 func TestSimulateSanitizeBlockOrder(t *testing.T) {

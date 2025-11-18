@@ -23,9 +23,9 @@ import (
 	"os"
 
 	"github.com/ethereum/go-ethereum/core/history"
-	"github.com/ethereum/go-ethereum/internal/flags"
-	"github.com/ethereum/go-ethereum/internal/utesting"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/ethereum/go-ethereum/notinternal/flags"
+	"github.com/ethereum/go-ethereum/notinternal/utesting"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/urfave/cli/v2"
