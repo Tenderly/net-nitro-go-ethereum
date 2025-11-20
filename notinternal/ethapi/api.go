@@ -379,7 +379,8 @@ func (api *BlockChainAPI) GetProof(ctx context.Context, address common.Address, 
 		return nil, err
 	}
 	codeHash := statedb.GetCodeHash(address)
-	storageRoot := statedb.GetStorageRoot(address)
+	var storageRoot common.Hash
+	//storageRoot := statedb.GetStorageRoot(address)
 
 	if len(keys) > 0 {
 		var storageTrie state.Trie
@@ -692,7 +693,7 @@ func (context *ChainContext) Config() *params.ChainConfig {
 	return context.b.ChainConfig()
 }
 
-func doCall(ctx context.Context, b Backend, args TransactionArgs, state *state.StateDB, header *types.Header, overrides *override.StateOverride, blockOverrides *override.BlockOverrides, timeout time.Duration, globalGasCap uint64, runCtx *core.MessageRunContext) (*core.ExecutionResult, error) {
+func doCall(ctx context.Context, b Backend, args TransactionArgs, state vm.StateDB, header *types.Header, overrides *override.StateOverride, blockOverrides *override.BlockOverrides, timeout time.Duration, globalGasCap uint64, runCtx *core.MessageRunContext) (*core.ExecutionResult, error) {
 	blockCtx := core.NewEVMBlockContext(header, NewChainContext(ctx, b), nil)
 	if blockOverrides != nil {
 		if err := blockOverrides.Apply(&blockCtx); err != nil {
@@ -725,7 +726,7 @@ func doCall(ctx context.Context, b Backend, args TransactionArgs, state *state.S
 	return applyMessage(ctx, b, args, state, header, timeout, gp, &blockCtx, &vm.Config{NoBaseFee: true}, precompiles, runCtx)
 }
 
-func applyMessage(ctx context.Context, b Backend, args TransactionArgs, state *state.StateDB, header *types.Header, timeout time.Duration, gp *core.GasPool, blockContext *vm.BlockContext, vmConfig *vm.Config, precompiles vm.PrecompiledContracts, runCtx *core.MessageRunContext) (*core.ExecutionResult, error) {
+func applyMessage(ctx context.Context, b Backend, args TransactionArgs, state vm.StateDB, header *types.Header, timeout time.Duration, gp *core.GasPool, blockContext *vm.BlockContext, vmConfig *vm.Config, precompiles vm.PrecompiledContracts, runCtx *core.MessageRunContext) (*core.ExecutionResult, error) {
 	// Get a new instance of the EVM.
 	if err := args.CallDefaults(gp.Gas(), blockContext.BaseFee, b.ChainConfig().ChainID); err != nil {
 		return nil, err
@@ -777,7 +778,7 @@ func applyMessage(ctx context.Context, b Backend, args TransactionArgs, state *s
 	return res, err
 }
 
-func applyMessageWithEVM(ctx context.Context, evm *vm.EVM, msg *core.Message, state *state.StateDB, timeout time.Duration, gp *core.GasPool, b Backend, header *types.Header, blockContext vm.BlockContext) (*core.ExecutionResult, error) {
+func applyMessageWithEVM(ctx context.Context, evm *vm.EVM, msg *core.Message, state vm.StateDB, timeout time.Duration, gp *core.GasPool, b Backend, header *types.Header, blockContext vm.BlockContext) (*core.ExecutionResult, error) {
 	// Wait for the context to be done and cancel the evm. Even if the
 	// EVM has finished, cancelling may be done (repeatedly)
 	go func() {
@@ -805,7 +806,7 @@ func applyMessageWithEVM(ctx context.Context, evm *vm.EVM, msg *core.Message, st
 	return result, nil
 }
 
-func runScheduledTxes(ctx context.Context, b core.NodeInterfaceBackendAPI, state *state.StateDB, header *types.Header, blockCtx vm.BlockContext, runCtx *core.MessageRunContext, result *core.ExecutionResult) (*core.ExecutionResult, error) {
+func runScheduledTxes(ctx context.Context, b core.NodeInterfaceBackendAPI, state vm.StateDB, header *types.Header, blockCtx vm.BlockContext, runCtx *core.MessageRunContext, result *core.ExecutionResult) (*core.ExecutionResult, error) {
 	scheduled := result.ScheduledTxes
 	for runCtx.IsGasEstimation() && len(scheduled) > 0 {
 		// This will panic if the scheduled tx is signed, but we only schedule unsigned ones
@@ -1541,7 +1542,9 @@ func AccessList(ctx context.Context, b Backend, blockNrOrHash rpc.BlockNumberOrH
 		log.Trace("Creating access list", "input", accessList)
 
 		// Copy the original db so we don't modify it
-		statedb := db.Copy()
+		//statedb := db.Copy()
+		statedb := db
+
 		// Set the accesslist to the last al
 		args.AccessList = &accessList
 		msg := args.ToMessage(header.BaseFee, b.RPCGasCap(), header, statedb, runCtx, true)

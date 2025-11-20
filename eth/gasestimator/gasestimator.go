@@ -25,7 +25,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/log"
@@ -46,10 +45,10 @@ type Options struct {
 	Config           *params.ChainConfig      // Chain configuration for hard fork selection
 	Chain            core.ChainContext        // Chain context to access past block hashes
 	Header           *types.Header            // Header defining the block context to execute in
-	State            *state.StateDB           // Pre-state on top of which to estimate the gas
+	State            vm.StateDB               // Pre-state on top of which to estimate the gas
 	BlockOverrides   *override.BlockOverrides // Block overrides to apply during the estimation
 	Backend          core.NodeInterfaceBackendAPI
-	RunScheduledTxes func(context.Context, core.NodeInterfaceBackendAPI, *state.StateDB, *types.Header, vm.BlockContext, *core.MessageRunContext, *core.ExecutionResult) (*core.ExecutionResult, error)
+	RunScheduledTxes func(context.Context, core.NodeInterfaceBackendAPI, vm.StateDB, *types.Header, vm.BlockContext, *core.MessageRunContext, *core.ExecutionResult) (*core.ExecutionResult, error)
 
 	ErrorRatio float64 // Allowed overestimation ratio for faster estimation termination
 }
@@ -123,14 +122,14 @@ func Estimate(ctx context.Context, call *core.Message, opts *Options, gasCap uin
 			if transfer == nil {
 				transfer = new(big.Int)
 			}
-			log.Debug("Gas estimation capped by limited funds", "original", hi, "balance", balance,
-				"sent", transfer, "maxFeePerGas", feeCap, "fundable", allowance)
+			//log.Debug("Gas estimation capped by limited funds", "original", hi, "balance", balance,
+			//	"sent", transfer, "maxFeePerGas", feeCap, "fundable", allowance)
 			hi = allowance.Uint64()
 		}
 	}
 	// Recap the highest gas allowance with specified gascap.
 	if gasCap != 0 && hi > gasCap {
-		log.Debug("Caller gas above allowance, capping", "requested", hi, "cap", gasCap)
+		//log.Debug("Caller gas above allowance, capping", "requested", hi, "cap", gasCap)
 		hi = gasCap
 	}
 	// If the transaction is a plain value transfer, short circuit estimation and
@@ -246,8 +245,14 @@ func run(ctx context.Context, call *core.Message, opts *Options) (*core.Executio
 	// Assemble the call and the call context
 	var (
 		evmContext = core.NewEVMBlockContext(opts.Header, opts.Chain, nil)
-		dirtyState = opts.State.Copy()
+		// VM interface does not have .Copy()
+		//dirtyState = opts.State.Copy()
+		dirtyState = opts.State
 	)
+
+	snapshot := dirtyState.Snapshot()
+	defer dirtyState.RevertToSnapshot(snapshot)
+
 	if opts.BlockOverrides != nil {
 		if err := opts.BlockOverrides.Apply(&evmContext); err != nil {
 			return nil, err
@@ -262,6 +267,7 @@ func run(ctx context.Context, call *core.Message, opts *Options) (*core.Executio
 	if call.BlobGasFeeCap != nil && call.BlobGasFeeCap.BitLen() == 0 {
 		evmContext.BlobBaseFee = new(big.Int)
 	}
+
 	// Monitor the outer context and interrupt the EVM upon cancellation. To avoid
 	// a dangling goroutine until the outer estimation finishes, create an internal
 	// context for the lifetime of this method call.

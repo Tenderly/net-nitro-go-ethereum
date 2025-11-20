@@ -142,4 +142,10 @@ type StateDB interface {
 	IntermediateRoot(bool) common.Hash
 
 	Reader() state.Reader
+
+	SetBalance(common.Address, *uint256.Int, tracing.BalanceChangeReason)
+
+	SetStorage(common.Address, map[common.Hash]common.Hash)
+
+	Error() error
 }

@@ -391,3 +391,21 @@ func (s *hookedStateDB) GetCurrentTxLogs() []*types.Log {
 func (s *hookedStateDB) GetAccessList() (addresses map[common.Address]int, slots []map[common.Hash]struct{}) {
 	return s.inner.GetAccessList()
 }
+
+func (s *hookedStateDB) Error() error {
+	return s.inner.Error()
+}
+
+func (s *hookedStateDB) SetBalance(addr common.Address, amount *uint256.Int, reason tracing.BalanceChangeReason) {
+	prev := s.inner.GetBalance(addr)
+	if prev.Cmp(amount) != 0 {
+		s.inner.SetBalance(addr, amount, reason)
+		if s.hooks.OnBalanceChange != nil {
+			s.hooks.OnBalanceChange(addr, prev.ToBig(), amount.ToBig(), reason)
+		}
+	}
+}
+
+func (s *hookedStateDB) SetStorage(addr common.Address, storage map[common.Hash]common.Hash) {
+	s.inner.SetStorage(addr, storage)
+}

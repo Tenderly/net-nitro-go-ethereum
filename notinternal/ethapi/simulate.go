@@ -153,7 +153,7 @@ func (m *simChainHeadReader) GetHeaderByHash(hash common.Hash) *types.Header {
 // it is not safe for concurrent use.
 type simulator struct {
 	b              Backend
-	state          *state.StateDB
+	state          vm.StateDB
 	base           *types.Header
 	chainConfig    *params.ChainConfig
 	gp             *core.GasPool
@@ -257,9 +257,9 @@ func (sim *simulator) processBlock(ctx context.Context, block *simBlock, header,
 		senders = make(map[common.Hash]common.Address)
 	)
 	tracingStateDB := vm.StateDB(sim.state)
-	if hooks := tracer.Hooks(); hooks != nil {
-		tracingStateDB = state.NewHookedState(sim.state, hooks)
-	}
+	//if hooks := tracer.Hooks(); hooks != nil {
+	//	tracingStateDB = state.NewHookedState(sim.state, hooks)
+	//}
 	evm := vm.NewEVM(blockContext, tracingStateDB, sim.chainConfig, *vmConfig)
 	// It is possible to override precompiles with EVM bytecode, or
 	// move them to another address.
@@ -287,7 +287,7 @@ func (sim *simulator) processBlock(ctx context.Context, block *simBlock, header,
 		txes[i] = tx
 		senders[txHash] = call.from()
 		tracer.reset(txHash, uint(i))
-		sim.state.SetTxContext(txHash, i)
+		sim.state.(*state.StateDB).SetTxContext(txHash, i)
 		// EoA check is always skipped, even in validation mode.
 		msg := call.ToMessage(header.BaseFee, 0, nil, nil, core.NewMessageCommitContext(nil), !sim.validate)
 		result, err := applyMessageWithEVM(ctx, evm, msg, sim.state, timeout, sim.gp, sim.b, header, blockContext)
@@ -303,7 +303,7 @@ func (sim *simulator) processBlock(ctx context.Context, block *simBlock, header,
 			root = sim.state.IntermediateRoot(sim.chainConfig.IsEIP158(blockContext.BlockNumber)).Bytes()
 		}
 		gasUsed += result.UsedGas
-		receipts[i] = core.MakeReceipt(evm, result, sim.state, blockContext.BlockNumber, common.Hash{}, blockContext.Time, tx, gasUsed, root)
+		receipts[i] = core.MakeReceipt(evm, result, sim.state.(*state.StateDB), blockContext.BlockNumber, common.Hash{}, blockContext.Time, tx, gasUsed, root)
 		blobGasUsed += receipts[i].BlobGasUsed
 		logs := tracer.Logs()
 		callRes := simCallResult{ReturnValue: result.Return(), Logs: logs, GasUsed: hexutil.Uint64(result.UsedGas)}
@@ -349,7 +349,7 @@ func (sim *simulator) processBlock(ctx context.Context, block *simBlock, header,
 	}
 	blockBody := &types.Body{Transactions: txes, Withdrawals: *block.BlockOverrides.Withdrawals}
 	chainHeadReader := &simChainHeadReader{ctx, sim.b}
-	b, err := sim.b.Engine().FinalizeAndAssemble(chainHeadReader, header, sim.state, blockBody, receipts)
+	b, err := sim.b.Engine().FinalizeAndAssemble(chainHeadReader, header, sim.state.(*state.StateDB), blockBody, receipts)
 	if err != nil {
 		return nil, nil, nil, err
 	}
