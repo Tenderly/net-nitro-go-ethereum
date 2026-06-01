@@ -250,11 +250,18 @@ func Run(ctx context.Context, call *core.Message, opts *Options) (*core.Executio
 // run assembles the EVM as defined by the consensus rules and runs the requested
 // call invocation.
 func run(ctx context.Context, call *core.Message, opts *Options) (*core.ExecutionResult, error) {
-	// Assemble the call and the call context
-	var (
-		evmContext = core.NewEVMBlockContext(opts.Header, opts.Chain, nil)
-		dirtyState = opts.State.Copy()
-	)
+	// Assemble the call and the call context.
+	//
+	// Isolate per-iteration mutations via Snapshot/RevertToSnapshot on the
+	// state itself rather than opts.State.Copy(). The binary search calls this
+	// function repeatedly with the same opts.State; reverting via the journal
+	// works for any StateDB implementation (real *state.StateDB and simulator
+	// wrappers alike) and avoids requiring a Copy/CopyVMStateDB hook, which the
+	// Tenderly Arbitrum Nitro StateDB wrapper does not implement.
+	evmContext := core.NewEVMBlockContext(opts.Header, opts.Chain, nil)
+	dirtyState := opts.State
+	snapID := dirtyState.Snapshot()
+	defer dirtyState.RevertToSnapshot(snapID)
 	if opts.BlockOverrides != nil {
 		if err := opts.BlockOverrides.Apply(&evmContext); err != nil {
 			return nil, err
